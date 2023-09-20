@@ -27,36 +27,15 @@ function play(){
   let userValue = parseInt(userInput.value, 10);
   //console.log('사용자가 뽑은 번호:', userValue);
 
-  //입력값 유효성 검사 : 1~100 범위 밖에 숫자를 입력한 경우
-  if(userValue<1 || userValue>100){
-    resultArea.textContent = '1~ 100 범위 안으로 숫자를 다시 입력해주세요.';    
+  if (!isValidInput(userValue)){
     return;
-  };
-
-  //입력값 유효성 검사 : 이미 입력한 숫자를 또 입력한 경우
-  if(userValueList.includes(userValue)){
-    resultArea.textContent = '이미 입력된 값이므로 다시 입력해주세요.';    
-    return;
-  };
-
-  //입력값 유효성 검사 : 정수 외의 입력한 경우 
-  if(isNaN(userValue) || userValue % 1 !== 0){
-    resultArea.textContent = '정수만 입력해주세요.';    
-    return;
-  };
+  }
 
   userValueList.push(userValue);
   console.log('userValueList', userValueList);
 
-  // 입력된 값과 랜덤 값 비교
-  if (userValue<computerNum){
-    resultArea.textContent = '위 👍';    
-  } else if (userValue>computerNum){
-    resultArea.textContent = '아래 👎';
-  } else {
-    resultArea.textContent = '정답 🤗';
-    playBtn.disabled = true;
-    gameOver = true;
+  if(checkAnswer(userValue)){
+    handleVictory();
     return;
   };
 
@@ -72,11 +51,65 @@ function play(){
 
   // game over인 경우 게임 종료
   if(gameOver){
-    playBtn.disabled = true;
-    resultArea.textContent = 'Game Over 💀';   
+    handleGameOver();
     return;
   };
 };
+
+//유효성 검사 분리
+function isValidInput(userValue){
+  //입력값 유효성 검사 : 1~100 범위 밖에 숫자를 입력한 경우
+  if(userValue<1 || userValue>100){
+    resultArea.textContent = '1~ 100 범위 안으로 숫자를 다시 입력해주세요.';    
+    return false;
+  };
+
+  //입력값 유효성 검사 : 이미 입력한 숫자를 또 입력한 경우
+  if(userValueList.includes(userValue)){
+    resultArea.textContent = '이미 입력된 값이므로 다시 입력해주세요.';    
+    return false;
+  };
+
+  //입력값 유효성 검사 : 정수 외의 입력한 경우 
+  if(isNaN(userValue) || userValue % 1 !== 0){
+    resultArea.textContent = '정수만 입력해주세요.';    
+    return false;
+  };
+  return true;
+};
+
+// 정답인지 아닌지 체크
+function isCorrectAnswer(userValue){
+  return userValue === computerNum;
+};
+
+// 정답 체크
+function checkAnswer(userValue){
+  // 입력된 값과 랜덤 값 비교
+  if (userValue<computerNum){
+    resultArea.textContent = '위 👍';    
+  } else if (userValue>computerNum){
+    resultArea.textContent = '아래 👎';
+  } else {
+    resultArea.textContent = '정답 🤗';
+    playBtn.disabled = true;
+    return true;
+  };
+  return false;
+}
+
+// 게임 승리 처리
+function handleVictory(){
+  playBtn.disabled = true;
+  resultArea.textContent = '정답 🤗';
+  gameOver =  true;
+}
+
+// 게임 종료 처리
+function handleGameOver(){
+  playBtn.disabled = true;
+  resultArea.textContent = 'Game Over 💀';   
+}
 
 // 위 아래 게임 초기화
 function reset(){
