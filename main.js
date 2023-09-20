@@ -68,7 +68,6 @@ function play (){
 
   if(gameOver){
     playBtn.disabled = true;
-
   }
 
 };
