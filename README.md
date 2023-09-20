@@ -1,4 +1,4 @@
-# js_study_project_01
+* js_study_project_01
 
 숫자 맞추기 게임 (up & down)
 
